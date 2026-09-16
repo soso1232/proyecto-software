@@ -1,0 +1,61 @@
+# Requerimientos Funcionales
+## Plataforma ERP + CRM para Emprendedores
+
+---
+
+## Problema 1: Falta de integración y sincronización de la información del emprendimiento
+
+### RF-01 - Gestión centralizada de usuarios y roles
+El sistema deberá permitir al administrador crear, modificar, activar y desactivar usuarios, asignándoles roles y permisos de acuerdo con las funciones que desempeñan dentro del emprendimiento.
+
+### RF-02 - Acceso según roles
+El sistema deberá controlar el acceso a los diferentes módulos de acuerdo con el rol del usuario, permitiendo que el administrador tenga acceso global, los socios tengan acceso a los módulos del negocio y los demás usuarios accedan únicamente a las funciones correspondientes.
+
+### RF-03 - Canal de comunicación interno
+El sistema deberá proporcionar un canal de comunicación interno que permita a socios y colaboradores compartir novedades e información relacionada con las actividades financieras y operativas del emprendimiento.
+
+### RF-04 - Gestión centralizada de proyectos
+El sistema deberá permitir registrar y administrar proyectos, indicando su etapa actual y asignando un responsable principal para facilitar el seguimiento de las actividades.
+
+### RF-05 - Visualización compartida de información
+El sistema deberá permitir que los usuarios autorizados consulten información actualizada de los proyectos, operaciones y datos relevantes del emprendimiento desde una plataforma centralizada.
+
+---
+
+## Problema 2: Gestión manual y poco estructurada de los procesos empresariales
+
+### RF-06 - Gestión de contactos
+El sistema deberá permitir registrar, consultar, modificar y eliminar información de clientes y prospectos, incluyendo datos como nombre, correo electrónico y empresa.
+
+### RF-07 - Búsqueda de contactos
+El sistema deberá proporcionar un mecanismo de búsqueda que permita localizar rápidamente contactos mediante criterios como nombre, correo electrónico o empresa.
+
+### RF-08 - Gestión de proyectos por etapas
+El sistema deberá permitir crear proyectos y actualizar visualmente su estado mediante diferentes etapas, como inicial, en desarrollo y finalizado.
+
+### RF-09 - Generación de cotizaciones
+El sistema deberá permitir crear y editar cotizaciones comerciales incluyendo clientes, ítems, planes, plazos de vigencia, valores totales, pagos únicos y valores mensuales recurrentes.
+
+### RF-10 - Exportación de cotizaciones
+El sistema deberá permitir generar y exportar las cotizaciones elaboradas en formato PDF, proporcionando un documento estructurado para su posterior envío al cliente.
+
+---
+
+## Problema 3: Dificultad para gestionar y comprender la información financiera
+
+### RF-11 - Registro de ingresos y pagos
+El sistema deberá permitir registrar los ingresos y pagos recibidos, especificando el pagador, tipo de pago, medio de ingreso, fecha y valor de la transacción.
+
+### RF-12 - Consulta del historial financiero
+El sistema deberá permitir consultar un historial de las transacciones financieras registradas y aplicar filtros para facilitar la búsqueda y revisión de los movimientos.
+
+### RF-13 - Gestión de suscripciones y gastos recurrentes
+El sistema deberá permitir registrar pagos recurrentes indicando el monto, periodicidad y fecha de cobro, además de generar alertas preventivas antes de la fecha establecida.
+
+### RF-14 - Distribución de utilidades
+El sistema deberá permitir configurar los porcentajes de distribución de las utilidades entre los socios y la reserva empresarial, validando que la suma de los porcentajes corresponda al 100%.
+
+### RF-15 - Diferenciación de pagos en cotizaciones
+El sistema deberá diferenciar dentro de las cotizaciones los cobros únicos de las suscripciones o pagos recurrentes, facilitando la proyección y gestión financiera del emprendimiento.
+
+---
