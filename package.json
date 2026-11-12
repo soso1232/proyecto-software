@@ -1,0 +1,23 @@
+{
+  "name": "proyecto-software",
+  "version": "1.0.0",
+  "description": "1. **Admin:**  Usuario encargado de administrar y controlar el sistema. Tiene acceso al 100% de los módulos y funcionalidades de la aplicación y cuenta con permisos para gestionar los usuarios mediante las operaciones\r 2. **Socio** Usuario del emprendimiento que participa en la gestión de los diferentes procesos y proyectos del negocio.\r 3. **Comercial:** Usuario encargado de gestionar la relación con los clientes y los procesos comerciales del emprendimiento. Tiene acceso al módulo CRM para administrar clientes, realizar seguimiento de oportunidades y gestionar las actividades comerciales.\r 4.  **Contador:** Usuario encargado de gestionar los procesos financieros y contables del emprendimiento. Tiene acceso al módulo ERP para registrar, consultar y gestionar la información financiera y administrativa del negocio.\r 5.  **Vendedor:** Usuario encargado de apoyar el proceso de ventas mediante la elaboración y gestión de cotizaciones. Tiene acceso al módulo de Cotización, perteneciente al CRM, para gestionar las cotizaciones de productos o servicios ofrecidos a los clientes.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/soso1232/proyecto-software.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/soso1232/proyecto-software/issues"
+  },
+  "homepage": "https://github.com/soso1232/proyecto-software#readme",
+  "dependencies": {
+    "express": "^5.3.0"
+  }
+}
