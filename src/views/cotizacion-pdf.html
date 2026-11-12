@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Cotización</title>
+  <style>
+    body { font-family: Arial, sans-serif; color: #111; background: #fff; margin: 0; padding: 40px; }
+    .doc { max-width: 760px; margin: 0 auto; }
+    h1 { color: #9c7a1c; border-bottom: 3px solid #d4af37; padding-bottom: 8px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th { background: #111; color: #d4af37; padding: 10px; text-align: left; }
+    td { padding: 10px; border-bottom: 1px solid #ccc; }
+    .total { text-align: right; font-size: 20px; font-weight: bold; margin-top: 20px; }
+    .acciones { margin-bottom: 20px; }
+    button { background: #d4af37; border: 0; padding: 10px 18px; font-weight: bold; cursor: pointer; border-radius: 4px; }
+    @media print { .acciones { display: none; } }
+  </style>
+</head>
+<body>
+  <div class="doc">
+    <div class="acciones">
+      <button onclick="window.print()">Imprimir / Guardar como PDF</button>
+    </div>
+    <h1>COTIZACIÓN <span id="num"></span></h1>
+    <p><strong>Cliente:</strong> <span id="cliente"></span></p>
+    <p><strong>Fecha:</strong> <span id="fecha"></span></p>
+    <table>
+      <thead><tr><th>Descripción</th><th>Cant.</th><th>Precio</th><th>Subtotal</th></tr></thead>
+      <tbody id="items"></tbody>
+    </table>
+    <p class="total">TOTAL: $ <span id="total"></span> COP</p>
+  </div>
+  <script>
+    const id = new URLSearchParams(location.search).get('id');
+    fetch('/api/cotizaciones/' + id).then(r => r.json()).then(c => {
+      document.getElementById('num').textContent = '#' + c.id;
+      document.getElementById('cliente').textContent = c.cliente;
+      document.getElementById('fecha').textContent = c.fecha;
+      document.getElementById('total').textContent = c.total.toLocaleString('es-CO');
+      document.getElementById('items').innerHTML = c.items.map(i =>
+        `<tr><td>${i.descripcion}</td><td>${i.cantidad}</td>
+         <td>$ ${i.precio.toLocaleString('es-CO')}</td>
+         <td>$ ${(i.cantidad * i.precio).toLocaleString('es-CO')}</td></tr>`).join('');
+    });
+  </script>
+</body>
+</html>

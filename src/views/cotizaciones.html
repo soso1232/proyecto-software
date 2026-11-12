@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Cotizaciones</title>
+  <link rel="stylesheet" href="/estilos.css">
+</head>
+<body>
+  <header><strong>Cotizaciones</strong> <a href="/menu">Menú</a></header>
+  <main>
+    <h2>Nueva cotización</h2>
+    <input id="cliente" placeholder="Cliente">
+    <table>
+      <thead><tr><th>Descripción</th><th>Cantidad</th><th>Precio (COP)</th></tr></thead>
+      <tbody id="items"></tbody>
+    </table>
+    <button onclick="agregarFila()">+ Agregar ítem</button>
+    <button onclick="crear()">Guardar cotización</button>
+    <p id="msg" class="error"></p>
+
+    <h2>Cotizaciones registradas</h2>
+    <table>
+      <thead><tr><th>ID</th><th>Cliente</th><th>Fecha</th><th>Total (COP)</th><th>PDF</th></tr></thead>
+      <tbody id="lista"></tbody>
+    </table>
+  </main>
+  <script>
+    function agregarFila() {
+      const tr = document.createElement('tr');
+      tr.innerHTML = '<td><input class="d" placeholder="Descripción"></td>' +
+        '<td><input class="c" type="number" min="1" value="1"></td>' +
+        '<td><input class="p" type="number" min="0" placeholder="0"></td>';
+      document.getElementById('items').appendChild(tr);
+    }
+
+    async function cargar() {
+      const datos = await (await fetch('/api/cotizaciones')).json();
+      document.getElementById('lista').innerHTML = datos.map(c =>
+        `<tr><td>${c.id}</td><td>${c.cliente}</td><td>${c.fecha}</td>
+         <td>$ ${c.total.toLocaleString('es-CO')}</td>
+         <td><a href="/cotizacion-pdf?id=${c.id}" target="_blank" style="color:#d4af37">Ver / PDF</a></td></tr>`).join('');
+    }
+
+    async function crear() {
+      const items = [...document.querySelectorAll('#items tr')].map(tr => ({
+        descripcion: tr.querySelector('.d').value,
+        cantidad: tr.querySelector('.c').value,
+        precio: tr.querySelector('.p').value
+      }));
+      const r = await fetch('/api/cotizaciones', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cliente: document.getElementById('cliente').value, items })
+      });
+      document.getElementById('msg').textContent = r.ok ? '' : 'Completa el cliente y al menos un ítem válido';
+      if (r.ok) {
+        document.getElementById('items').innerHTML = '';
+        document.getElementById('cliente').value = '';
+        agregarFila();
+      }
+      cargar();
+    }
+
+    agregarFila();
+    cargar();
+  </script>
+</body>
+</html>

@@ -4,12 +4,14 @@ const UsuarioController = require('./src/controllers/UsuarioController');
 const ContactoController = require('./src/controllers/ContactoController');
 const ProyectoController = require('./src/controllers/ProyectoController');
 const DistribucionController = require('./src/controllers/DistribucionController');
+const CotizacionController = require('./src/controllers/CotizacionController');
 
 const app = express();
 const usuarioCtrl = new UsuarioController();
 const contactoCtrl = new ContactoController();
 const proyectoCtrl = new ProyectoController();
 const distribucionCtrl = new DistribucionController();
+const cotizacionCtrl = new CotizacionController();
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -24,6 +26,8 @@ app.get('/usuarios', vista('usuarios.html'));
 app.get('/contactos', vista('contactos.html'));
 app.get('/proyectos', vista('proyectos.html'));
 app.get('/distribucion', vista('distribucion.html'));
+app.get('/cotizaciones', vista('cotizaciones.html'));
+app.get('/cotizacion-pdf', vista('cotizacion-pdf.html'));
 
 // API Usuarios (HU01)
 app.post('/api/login', (req, res) => {
@@ -71,6 +75,19 @@ app.put('/api/distribucion', (req, res) => {
 });
 app.get('/api/distribucion/simular', (req, res) =>
   res.json(distribucionCtrl.simular(Number(req.query.monto) || 0)));
+
+// API Cotizaciones (HU04)
+app.get('/api/cotizaciones', (req, res) => res.json(cotizacionCtrl.listar()));
+app.get('/api/cotizaciones/:id', (req, res) => {
+  const c = cotizacionCtrl.obtener(Number(req.params.id));
+  if (c) return res.json(c);
+  res.status(404).json({ error: 'Cotización no encontrada' });
+});
+app.post('/api/cotizaciones', (req, res) => {
+  const creada = cotizacionCtrl.crear(req.body.cliente, req.body.items);
+  if (creada) return res.status(201).json(creada);
+  res.status(400).json({ error: 'Datos de cotización inválidos' });
+});
 
 const PUERTO = 3000;
 app.listen(PUERTO, () => console.log(`Servidor en http://localhost:${PUERTO}`));
