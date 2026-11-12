@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Menú principal</title>
+  <link rel="stylesheet" href="/estilos.css">
+</head>
+<body>
+  <header><strong>Sistema de Gestión</strong> <a href="/">Salir</a></header>
+  <main>
+    <h2 id="saludo">Menú principal</h2>
+    <div class="tarjetas">
+      <a href="/usuarios">Usuarios (HU01)</a>
+      <a href="/contactos">Contactos (HU02)</a>
+      <a href="/proyectos">Proyectos (HU03)</a>
+    </div>
+  </main>
+  <script>
+    const u = JSON.parse(sessionStorage.getItem('usuario') || 'null');
+    if (!u) location.href = '/';
+    else document.getElementById('saludo').textContent = 'Bienvenido, ' + u.nombre + ' (' + u.rol + ')';
+  </script>
+</body>
+</html>

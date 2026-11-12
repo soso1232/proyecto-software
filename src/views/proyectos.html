@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Proyectos</title>
+  <link rel="stylesheet" href="/estilos.css">
+</head>
+<body>
+  <header><strong>Proyectos por etapas</strong> <a href="/menu">Menú</a></header>
+  <main>
+    <h2>Registrar proyecto</h2>
+    <input id="nombre" placeholder="Nombre del proyecto">
+    <input id="cliente" placeholder="Cliente">
+    <button onclick="crear()">Guardar</button>
+    <table>
+      <thead><tr><th>ID</th><th>Proyecto</th><th>Cliente</th><th>Etapa</th></tr></thead>
+      <tbody id="lista"></tbody>
+    </table>
+  </main>
+  <script>
+    let etapas = [];
+    async function cargar() {
+      etapas = await (await fetch('/api/etapas')).json();
+      const datos = await (await fetch('/api/proyectos')).json();
+      document.getElementById('lista').innerHTML = datos.map(p => `
+        <tr>
+          <td>${p.id}</td><td>${p.nombre}</td><td>${p.cliente}</td>
+          <td><select onchange="cambiar(${p.id}, this.value)">
+            ${etapas.map(e => `<option ${e === p.etapa ? 'selected' : ''}>${e}</option>`).join('')}
+          </select></td>
+        </tr>`).join('');
+    }
+    async function crear() {
+      const body = {
+        nombre: document.getElementById('nombre').value,
+        cliente: document.getElementById('cliente').value
+      };
+      await fetch('/api/proyectos', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body)
+      });
+      cargar();
+    }
+    async function cambiar(id, etapa) {
+      await fetch('/api/proyectos/' + id + '/etapa', {
+        method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ etapa })
+      });
+      cargar();
+    }
+    cargar();
+  </script>
+</body>
+</html>
