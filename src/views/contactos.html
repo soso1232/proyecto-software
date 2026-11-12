@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Contactos</title>
+  <link rel="stylesheet" href="/estilos.css">
+</head>
+<body>
+  <header><strong>Contactos</strong> <a href="/menu">Menú</a></header>
+  <main>
+    <h2>Registrar contacto</h2>
+    <input id="nombre" placeholder="Nombre">
+    <input id="correo" type="email" placeholder="Correo">
+    <input id="telefono" placeholder="Teléfono">
+    <select id="tipo"><option>Cliente</option><option>Proveedor</option></select>
+    <button onclick="crear()">Guardar</button>
+    <table>
+      <thead><tr><th>ID</th><th>Nombre</th><th>Correo</th><th>Teléfono</th><th>Tipo</th></tr></thead>
+      <tbody id="lista"></tbody>
+    </table>
+  </main>
+  <script>
+    async function cargar() {
+      const datos = await (await fetch('/api/contactos')).json();
+      document.getElementById('lista').innerHTML = datos.map(c =>
+        `<tr><td>${c.id}</td><td>${c.nombre}</td><td>${c.correo}</td><td>${c.telefono}</td><td>${c.tipo}</td></tr>`).join('');
+    }
+    async function crear() {
+      const body = {
+        nombre: document.getElementById('nombre').value,
+        correo: document.getElementById('correo').value,
+        telefono: document.getElementById('telefono').value,
+        tipo: document.getElementById('tipo').value
+      };
+      await fetch('/api/contactos', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body)
+      });
+      cargar();
+    }
+    cargar();
+  </script>
+</body>
+</html>

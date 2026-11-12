@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Ingreso</title>
+  <link rel="stylesheet" href="/estilos.css">
+</head>
+<body>
+  <header><strong>Sistema de Gestión</strong></header>
+  <main>
+    <h2>Iniciar sesión</h2>
+    <input id="correo" type="email" placeholder="Correo"><br>
+    <input id="clave" type="password" placeholder="Clave"><br>
+    <button onclick="entrar()">Ingresar</button>
+    <p id="msg" class="error"></p>
+    <small>Prueba: admin@correo.com / admin123</small>
+  </main>
+  <script>
+    async function entrar() {
+      const correo = document.getElementById('correo').value;
+      const clave = document.getElementById('clave').value;
+      const r = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ correo, clave })
+      });
+      if (r.ok) {
+        const u = await r.json();
+        sessionStorage.setItem('usuario', JSON.stringify(u));
+        location.href = '/menu';
+      } else {
+        document.getElementById('msg').textContent = 'Correo o clave incorrectos';
+      }
+    }
+  </script>
+</body>
+</html>

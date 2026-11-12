@@ -1,0 +1,63 @@
+const express = require('express');
+const path = require('path');
+const UsuarioController = require('./src/controllers/UsuarioController');
+const ContactoController = require('./src/controllers/ContactoController');
+const ProyectoController = require('./src/controllers/ProyectoController');
+
+const app = express();
+const usuarioCtrl = new UsuarioController();
+const contactoCtrl = new ContactoController();
+const proyectoCtrl = new ProyectoController();
+
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
+
+const vista = (archivo) => (req, res) =>
+  res.sendFile(path.join(__dirname, 'src', 'views', archivo));
+
+// Vistas
+app.get('/', vista('login.html'));
+app.get('/menu', vista('menu.html'));
+app.get('/usuarios', vista('usuarios.html'));
+app.get('/contactos', vista('contactos.html'));
+app.get('/proyectos', vista('proyectos.html'));
+
+// API Usuarios (HU01)
+app.post('/api/login', (req, res) => {
+  const { correo, clave } = req.body;
+  const usuario = usuarioCtrl.iniciarSesion(correo, clave);
+  if (usuario) return res.json(usuario);
+  res.status(401).json({ error: 'Correo o clave incorrectos' });
+});
+app.get('/api/usuarios', (req, res) => res.json(usuarioCtrl.listarUsuarios()));
+app.post('/api/usuarios', (req, res) => {
+  const { nombre, correo, clave, rol } = req.body;
+  const creado = usuarioCtrl.crearUsuario(nombre, correo, clave, rol);
+  if (creado) return res.status(201).json(creado);
+  res.status(409).json({ error: 'El correo ya existe' });
+});
+
+// API Contactos (HU02)
+app.get('/api/contactos', (req, res) => res.json(contactoCtrl.listarContactos()));
+app.post('/api/contactos', (req, res) => {
+  const { id, nombre, correo, telefono, tipo } = req.body;
+  const todos = contactoCtrl.listarContactos();
+  const nuevoId = id || todos.length + 1;
+  res.status(201).json(contactoCtrl.crearContacto(nuevoId, nombre, correo, telefono, tipo));
+});
+
+// API Proyectos (HU03)
+app.get('/api/etapas', (req, res) => res.json(proyectoCtrl.listarEtapas()));
+app.get('/api/proyectos', (req, res) => res.json(proyectoCtrl.listarProyectos()));
+app.post('/api/proyectos', (req, res) => {
+  const { nombre, cliente } = req.body;
+  res.status(201).json(proyectoCtrl.crearProyecto(nombre, cliente));
+});
+app.put('/api/proyectos/:id/etapa', (req, res) => {
+  const actualizado = proyectoCtrl.cambiarEtapa(Number(req.params.id), req.body.etapa);
+  if (actualizado) return res.json(actualizado);
+  res.status(400).json({ error: 'Proyecto o etapa inválidos' });
+});
+
+const PUERTO = 3000;
+app.listen(PUERTO, () => console.log(`Servidor en http://localhost:${PUERTO}`));

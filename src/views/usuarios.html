@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Usuarios</title>
+  <link rel="stylesheet" href="/estilos.css">
+</head>
+<body>
+  <header><strong>Usuarios</strong> <a href="/menu">Menú</a></header>
+  <main>
+    <h2>Registrar usuario</h2>
+    <input id="nombre" placeholder="Nombre">
+    <input id="correo" type="email" placeholder="Correo">
+    <input id="clave" type="password" placeholder="Clave">
+    <select id="rol"><option>Usuario</option><option>Administrador</option></select>
+    <button onclick="crear()">Guardar</button>
+    <p id="msg" class="error"></p>
+    <table>
+      <thead><tr><th>ID</th><th>Nombre</th><th>Correo</th><th>Rol</th></tr></thead>
+      <tbody id="lista"></tbody>
+    </table>
+  </main>
+  <script>
+    async function cargar() {
+      const datos = await (await fetch('/api/usuarios')).json();
+      document.getElementById('lista').innerHTML = datos.map(u =>
+        `<tr><td>${u.id}</td><td>${u.nombre}</td><td>${u.correo}</td><td>${u.rol}</td></tr>`).join('');
+    }
+    async function crear() {
+      const body = {
+        nombre: document.getElementById('nombre').value,
+        correo: document.getElementById('correo').value,
+        clave: document.getElementById('clave').value,
+        rol: document.getElementById('rol').value
+      };
+      const r = await fetch('/api/usuarios', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body)
+      });
+      document.getElementById('msg').textContent = r.ok ? '' : 'El correo ya existe';
+      cargar();
+    }
+    cargar();
+  </script>
+</body>
+</html>
