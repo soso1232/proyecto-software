@@ -3,11 +3,13 @@ const path = require('path');
 const UsuarioController = require('./src/controllers/UsuarioController');
 const ContactoController = require('./src/controllers/ContactoController');
 const ProyectoController = require('./src/controllers/ProyectoController');
+const DistribucionController = require('./src/controllers/DistribucionController');
 
 const app = express();
 const usuarioCtrl = new UsuarioController();
 const contactoCtrl = new ContactoController();
 const proyectoCtrl = new ProyectoController();
+const distribucionCtrl = new DistribucionController();
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -21,6 +23,7 @@ app.get('/menu', vista('menu.html'));
 app.get('/usuarios', vista('usuarios.html'));
 app.get('/contactos', vista('contactos.html'));
 app.get('/proyectos', vista('proyectos.html'));
+app.get('/distribucion', vista('distribucion.html'));
 
 // API Usuarios (HU01)
 app.post('/api/login', (req, res) => {
@@ -58,6 +61,16 @@ app.put('/api/proyectos/:id/etapa', (req, res) => {
   if (actualizado) return res.json(actualizado);
   res.status(400).json({ error: 'Proyecto o etapa inválidos' });
 });
+
+// API Distribución financiera (HU05)
+app.get('/api/distribucion', (req, res) => res.json(distribucionCtrl.listar()));
+app.put('/api/distribucion', (req, res) => {
+  const resultado = distribucionCtrl.actualizar(req.body);
+  if (resultado.ok) return res.json(resultado.datos);
+  res.status(400).json({ error: resultado.error });
+});
+app.get('/api/distribucion/simular', (req, res) =>
+  res.json(distribucionCtrl.simular(Number(req.query.monto) || 0)));
 
 const PUERTO = 3000;
 app.listen(PUERTO, () => console.log(`Servidor en http://localhost:${PUERTO}`));

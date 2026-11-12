@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Distribución financiera</title>
+  <link rel="stylesheet" href="/estilos.css">
+</head>
+<body>
+  <header><strong>Distribución financiera</strong> <a href="/menu">Menú</a></header>
+  <main>
+    <h2>Configurar porcentajes</h2>
+    <table>
+      <thead><tr><th>Rubro</th><th>Porcentaje (%)</th></tr></thead>
+      <tbody id="lista"></tbody>
+    </table>
+    <p>Total: <strong id="total">0</strong>%</p>
+    <button onclick="guardar()">Guardar configuración</button>
+    <p id="msg"></p>
+
+    <h2>Simular distribución</h2>
+    <input id="monto" type="number" placeholder="Monto en COP">
+    <button onclick="simular()">Calcular</button>
+    <table>
+      <thead><tr><th>Rubro</th><th>%</th><th>Valor (COP)</th></tr></thead>
+      <tbody id="resultado"></tbody>
+    </table>
+  </main>
+  <script>
+    let items = [];
+
+    async function cargar() {
+      items = await (await fetch('/api/distribucion')).json();
+      document.getElementById('lista').innerHTML = items.map((d, i) =>
+        `<tr><td>${d.concepto}</td>
+         <td><input type="number" min="0" max="100" value="${d.porcentaje}" oninput="cambiar(${i}, this.value)"></td></tr>`
+      ).join('');
+      actualizarTotal();
+    }
+
+    function cambiar(i, valor) {
+      items[i].porcentaje = Number(valor);
+      actualizarTotal();
+    }
+
+    function actualizarTotal() {
+      const total = items.reduce((s, d) => s + Number(d.porcentaje), 0);
+      const el = document.getElementById('total');
+      el.textContent = total;
+      el.className = total === 100 ? '' : 'error';
+    }
+
+    async function guardar() {
+      const r = await fetch('/api/distribucion', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(items)
+      });
+      const msg = document.getElementById('msg');
+      if (r.ok) {
+        msg.className = '';
+        msg.textContent = 'Configuración guardada correctamente';
+      } else {
+        const e = await r.json();
+        msg.className = 'error';
+        msg.textContent = e.error;
+      }
+    }
+
+    async function simular() {
+      const monto = Number(document.getElementById('monto').value) || 0;
+      const datos = await (await fetch('/api/distribucion/simular?monto=' + monto)).json();
+      document.getElementById('resultado').innerHTML = datos.map(d =>
+        `<tr><td>${d.concepto}</td><td>${d.porcentaje}%</td><td>$ ${d.valor.toLocaleString('es-CO')}</td></tr>`
+      ).join('');
+    }
+
+    cargar();
+  </script>
+</body>
+</html>
